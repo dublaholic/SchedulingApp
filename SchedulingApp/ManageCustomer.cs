@@ -12,7 +12,7 @@ namespace SchedulingApp
 {
     public partial class ManageCustomer : Form
     {
-        int cityID;
+      //  int cityID;
         public ManageCustomer(Customer modCustomer)
         {
             InitializeComponent();
@@ -63,33 +63,36 @@ namespace SchedulingApp
 
         private void cmbCity_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (cmbCity.SelectedItem)
-            {
-                case "New York":
-                    cmbCountry.SelectedItem = "US";
-                    cityID = 2;
-                    break;
-                case "Los Angeles":
-                    cmbCountry.SelectedItem = "US";
-                    cityID = 2;
-                    break;
-                case "Toronto":
-                    cmbCountry.SelectedItem = "Canada";
-                    cityID = 3;
-                    break;
-                case "Vancouver":
-                    cmbCountry.SelectedItem = "Canada";
-                    cityID = 4;
-                    break;
-                case "Oslo":
-                    cmbCountry.SelectedItem = "Norway";
-                    cityID = 5;
-                    break;
-                default:
-                    cmbCountry.SelectedItem = "";
-                    cityID = -1;
-                    break;
-            }
+            //switch (cmbCity.SelectedItem)
+            //{
+            //    case "New York":
+            //        cmbCountry.SelectedItem = "US";
+            //        cityID = 2;
+            //        break;
+            //    case "Los Angeles":
+            //        cmbCountry.SelectedItem = "US";
+            //        cityID = 2;
+            //        break;
+            //    case "Toronto":
+            //        cmbCountry.SelectedItem = "Canada";
+            //        cityID = 3;
+            //        break;
+            //    case "Vancouver":
+            //        cmbCountry.SelectedItem = "Canada";
+            //        cityID = 4;
+            //        break;
+            //    case "Oslo":
+            //        cmbCountry.SelectedItem = "Norway";
+            //        cityID = 5;
+            //        break;
+            //    default:
+            //        cmbCountry.SelectedItem = "";
+            //        cityID = -1;
+            //        break;
+
+
+                   
+            //}
         }
             
     }

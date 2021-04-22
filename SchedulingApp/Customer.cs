@@ -17,5 +17,29 @@ namespace SchedulingApp
         public string postalCode { get; set; }
         public string phone { get; set; }
         public bool active { get; set; }
+        
+        public Customer()
+        {
+
+        }
+
+        public Customer(int CustomerId, string CustomerName, string Address, string Address2, string City, string Country, string PostalCode, string Phone, bool Active)
+        {
+
+        }
+
+        public Customer(string CustomerName, string Address, string Address2, string PostalCode, string Phone, bool Active)
+        {
+            
+            customerName = CustomerName;
+            address = Address;
+            address2 = Address2;
+            postalCode = PostalCode;
+            phone = Phone;
+            active = Active;
+        }
+        
+        
     }
+
 }

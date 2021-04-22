@@ -12,13 +12,15 @@ namespace SchedulingApp
 {
     public partial class AddCustomer : Form
     {
-        User loginUser;
-        Customer newCustomer;
+        public User loginUser;
+        
+
         int cityID;
         public AddCustomer(User user)
         {
             InitializeComponent();
             setupDropdowns();
+            loginUser = user;
         }
         public void setupDropdowns()
         {
@@ -44,21 +46,24 @@ namespace SchedulingApp
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            txtName.Text = newCustomer.customerName;
-            txtAddress.Text = newCustomer.address;
-            txtAddress2.Text = newCustomer.address2;
-            cmbCity.SelectedItem = newCustomer.city;
-            cmbCountry.SelectedItem = newCustomer.country;
-            txtPostal.Text = newCustomer.postalCode;
-            txtPhone.Text = newCustomer.phone;
+            bool activeCustomer;
+            DataAction addCustomer = new DataAction();
+            
             if (chkActive.Checked == true)
             {
-                newCustomer.active = true;
+                activeCustomer = true;
             }
             else
             {
-                newCustomer.active = false;
+                activeCustomer = false;
+
             }
+            Customer modCustomer = new Customer(txtName.Text, txtAddress.Text, txtAddress2.Text, txtPostal.Text, txtPhone.Text, activeCustomer);
+            addCustomer.addCustomer(modCustomer.customerName, modCustomer.active, modCustomer.address, modCustomer.address2, cityID, modCustomer.postalCode, modCustomer.phone, loginUser.username);
+
+            this.Close();
+            
+            
         }
 
         private void AddCustomer_Load(object sender, EventArgs e)

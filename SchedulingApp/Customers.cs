@@ -41,17 +41,32 @@ namespace SchedulingApp
             DataAction customerData = new DataAction();
             dgvCustomers.DataSource = customerData.GetCustomers();
             dgvCustomers.Refresh();
+           
+           
+        }
+        private void Form1_Activated(object sender, System.EventArgs e)
+        {
+       
         }
 
         private void btnModify_Click(object sender, EventArgs e)
         {
             Customer modCustomer = (Customer)dgvCustomers.CurrentRow.DataBoundItem;
-            new ManageCustomer(modCustomer).ShowDialog();
+            ManageCustomer manageCustomer = new ManageCustomer(modCustomer);
+            manageCustomer.FormClosed += Customer_FormClosed;
+            manageCustomer.Show();
+            
+            GetCustomerList();
+        }
+        private void Customer_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            GetCustomerList();
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
             Form addCustomer = new AddCustomer(loginUser);
+            addCustomer.FormClosed += Customer_FormClosed;
             addCustomer.ShowDialog();
         }
     }

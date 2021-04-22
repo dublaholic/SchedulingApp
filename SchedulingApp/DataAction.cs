@@ -272,11 +272,44 @@ namespace SchedulingApp
                 return options;
             }
         }
-        public int addAddress(string address, string address2, int cityId, string postalCode, string phone, string createdBy)
+        public void addCustomer(string customerName, bool active, string address, string address2, int cityId, string postalCode, string phone, string createdBy)
         {
             DateTime stamp = TimeStamp();
             string formatedDate = FormatDate(stamp);
-            string addAddressQuery = 
+            string addAddressQuery = "INSERT INTO address(address, address2, cityId, postalCode, phone, createDate, createdBy, lastUpdateBy) " +
+                "VALUES (@address, @address2, @cityId, @postalCode, @phone, @createDate, @createdBy, @lastUpdateBy); SELECT LAST_INSERT_ID()";
+            string addCustomer = "INSERT INTO customer(customerName, addressId, active, createDate, createdBy, lastUpdateBy) " +
+                "VALUES (@customerName, @addressId, @active, @createDate, @createdBy, @customerLastUpdateBy)";
+            if(this.OpenConnection() == true)
+            {
+                MySqlCommand addAddressrCMD = new MySqlCommand(addAddressQuery, connection);
+                addAddressrCMD.Parameters.AddWithValue("@address", address);
+                addAddressrCMD.Parameters.AddWithValue("@address2", address2);
+                addAddressrCMD.Parameters.AddWithValue("@cityId", cityId);
+                addAddressrCMD.Parameters.AddWithValue("@postalCode", postalCode);
+                addAddressrCMD.Parameters.AddWithValue("@phone", phone);
+                addAddressrCMD.Parameters.AddWithValue("@createDate", formatedDate);
+                addAddressrCMD.Parameters.AddWithValue("@createdBy", createdBy);
+                addAddressrCMD.Parameters.AddWithValue("@lastUpdateBy", createdBy);
+
+                int returnedAddressId = addAddressrCMD.ExecuteNonQuery();
+
+                MySqlCommand addCustomerCMD = new MySqlCommand(addCustomer, connection);
+                addCustomerCMD.Parameters.AddWithValue("@customerName", customerName);
+                addCustomerCMD.Parameters.AddWithValue("@addressID", returnedAddressId);
+                addCustomerCMD.Parameters.AddWithValue("@active", active);
+                addCustomerCMD.Parameters.AddWithValue("@createDate", formatedDate);
+                addCustomerCMD.Parameters.AddWithValue("@createdBy", createdBy);
+                addCustomerCMD.Parameters.AddWithValue("@customerLastUpdateBy", createdBy);
+
+                addCustomerCMD.ExecuteNonQuery();
+
+                this.CloseConnection();
+
+
+
+
+            }
 
         }
      
@@ -293,7 +326,7 @@ namespace SchedulingApp
         }
         public string FormatDate(DateTime value)
         {
-            return value.ToString("yyyy/MM/dd HH:mm:ss:ffff");
+            return value.ToString("yyyy-MM-dd HH:mm");
         }
 
         public void LogUserActivity(string userLog)
