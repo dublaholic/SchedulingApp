@@ -12,13 +12,14 @@ namespace SchedulingApp
 {
     public partial class ManageAppointment : Form
     {
-        public ManageAppointment(Appointment modAppointment)
+        public User loginUser;
+        public ManageAppointment(Appointment modAppointment, User user)
         {
+
             InitializeComponent();
-           
+            InitializeDateTimePicker();
             setupDropdowns();
-
-
+            loginUser = user;
 
             txtAppointmentId.Text = modAppointment.appointmentId.ToString();
             cmbCustomerName.SelectedItem = modAppointment.customerName;
@@ -27,10 +28,18 @@ namespace SchedulingApp
             txtDescription.Text = modAppointment.description.ToString();
             txtLocation.Text = modAppointment.location.ToString();
             txtContact.Text = modAppointment.contact.ToString();
-            txtType.Text = modAppointment.type.ToString();
+            cmbType.Text = modAppointment.type.ToString();
             txtURL.Text = modAppointment.URL.ToString();
-            txtStart.Text = modAppointment.start.ToString();
-            txtEnd.Text = modAppointment.end.ToString();
+            dtpStart.Text = modAppointment.start.ToString();
+            dtpEnd.Text = modAppointment.end.ToString();
+        }
+        public void InitializeDateTimePicker()
+        {
+            dtpStart.Format = DateTimePickerFormat.Custom;
+            dtpStart.CustomFormat = "yyyy-MM-dd HH:mm";
+            dtpEnd.Format = DateTimePickerFormat.Custom;
+            dtpEnd.CustomFormat = "yyyy-MM-dd HH:mm";
+
         }
         public void setupDropdowns()
         {
@@ -56,6 +65,15 @@ namespace SchedulingApp
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            this.Close();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            
+            DataAction modAppointment = new DataAction();
+
+            modAppointment.ModifyAppointment(Int32.Parse(txtAppointmentId.Text), cmbCustomerName.Text, cmbUserName.Text, txtTitle.Text, txtDescription.Text, txtLocation.Text, txtContact.Text, cmbType.Text, txtURL.Text, dtpStart.Value, dtpEnd.Value, loginUser.username);
             this.Close();
         }
     }

@@ -29,7 +29,6 @@ namespace SchedulingApp
                     lblErrorText.Text = "The username and password did not match";
                     btnSubmit.Text = "Submit";
                     btnExit.Text = "Exit";
-                    btnRegister.Text = "Register";
                     break;
                 case "Spanish (Mexico)":
                     lblUsername.Text = "Nombre de usuario:";
@@ -37,7 +36,6 @@ namespace SchedulingApp
                     lblErrorText.Text = "El nombre de usuario y la contraseña no coinciden";
                     btnSubmit.Text = "Enviar";
                     btnExit.Text = "Salida";
-                    btnRegister.Text = "Registrarse";
                     break;
                 default:
                     lblUsername.Text = "Username:";
@@ -45,7 +43,6 @@ namespace SchedulingApp
                     lblErrorText.Text = "Error";
                     btnSubmit.Text = "Submit";
                     btnExit.Text = "Exit";
-                    btnRegister.Text = "Register";
                     break;
             }
         }

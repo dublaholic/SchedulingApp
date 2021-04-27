@@ -158,6 +158,38 @@ namespace SchedulingApp
                 return customers;
             }
         }
+        public List<User> GetUsers()
+        {
+            List<User> users = new List<User>();
+            string usersQuery = "SELECT userId, userName, password, active FROM user";
+                
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand usersCMD = new MySqlCommand(usersQuery, connection);
+
+                using (MySqlDataReader rdr = usersCMD.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        users.Add(new User()
+                        {
+                            userID = int.Parse(rdr["userId"].ToString()),
+                            username = rdr["userName"].ToString(),
+                            password = rdr["password"].ToString(),
+                            active = int.Parse(rdr["active"].ToString())
+
+                        }); 
+                    }
+                }
+                this.CloseConnection();
+                return users;
+            }
+            else
+            {
+                return users;
+            }
+        }
         public List<string> getCustomerDropdowns()
         {
             List<string> options = new List<string>();
@@ -272,27 +304,32 @@ namespace SchedulingApp
                 return options;
             }
         }
-        public void addCustomer(string customerName, bool active, string address, string address2, int cityId, string postalCode, string phone, string createdBy)
+        public void AddCustomer(string customerName, bool active, string address, string address2, int cityId, string postalCode, string phone, string createdBy)
         {
             DateTime stamp = TimeStamp();
             string formatedDate = FormatDate(stamp);
             string addAddressQuery = "INSERT INTO address(address, address2, cityId, postalCode, phone, createDate, createdBy, lastUpdateBy) " +
-                "VALUES (@address, @address2, @cityId, @postalCode, @phone, @createDate, @createdBy, @lastUpdateBy); SELECT LAST_INSERT_ID()";
+                "VALUES (@address, @address2, @cityId, @postalCode, @phone, @createDate, @createdBy, @lastUpdateBy)";
+            string getLastAddressId = "SELECT MAX(addressId) FROM address";
             string addCustomer = "INSERT INTO customer(customerName, addressId, active, createDate, createdBy, lastUpdateBy) " +
                 "VALUES (@customerName, @addressId, @active, @createDate, @createdBy, @customerLastUpdateBy)";
             if(this.OpenConnection() == true)
             {
-                MySqlCommand addAddressrCMD = new MySqlCommand(addAddressQuery, connection);
-                addAddressrCMD.Parameters.AddWithValue("@address", address);
-                addAddressrCMD.Parameters.AddWithValue("@address2", address2);
-                addAddressrCMD.Parameters.AddWithValue("@cityId", cityId);
-                addAddressrCMD.Parameters.AddWithValue("@postalCode", postalCode);
-                addAddressrCMD.Parameters.AddWithValue("@phone", phone);
-                addAddressrCMD.Parameters.AddWithValue("@createDate", formatedDate);
-                addAddressrCMD.Parameters.AddWithValue("@createdBy", createdBy);
-                addAddressrCMD.Parameters.AddWithValue("@lastUpdateBy", createdBy);
+                MySqlCommand addAddressCMD = new MySqlCommand(addAddressQuery, connection);
+                addAddressCMD.Parameters.AddWithValue("@address", address);
+                addAddressCMD.Parameters.AddWithValue("@address2", address2);
+                addAddressCMD.Parameters.AddWithValue("@cityId", cityId);
+                addAddressCMD.Parameters.AddWithValue("@postalCode", postalCode);
+                addAddressCMD.Parameters.AddWithValue("@phone", phone);
+                addAddressCMD.Parameters.AddWithValue("@createDate", formatedDate);
+                addAddressCMD.Parameters.AddWithValue("@createdBy", createdBy);
+                addAddressCMD.Parameters.AddWithValue("@lastUpdateBy", createdBy);
 
-                int returnedAddressId = addAddressrCMD.ExecuteNonQuery();
+                addAddressCMD.ExecuteNonQuery();
+
+
+                MySqlCommand getAddressIdCMD = new MySqlCommand(getLastAddressId, connection);
+                int returnedAddressId = int.Parse(getAddressIdCMD.ExecuteScalar().ToString());
 
                 MySqlCommand addCustomerCMD = new MySqlCommand(addCustomer, connection);
                 addCustomerCMD.Parameters.AddWithValue("@customerName", customerName);
@@ -305,14 +342,287 @@ namespace SchedulingApp
                 addCustomerCMD.ExecuteNonQuery();
 
                 this.CloseConnection();
-
-
-
-
             }
 
         }
-     
+        public void AddUser(string username, string password, int active, string createdBy)
+        {
+            DateTime stamp = TimeStamp();
+            string formatedDate = FormatDate(stamp);
+            string addUserQuery = "INSERT INTO user(username, password, active, createDate, createdBy, lastUpdate, lastUpdateBy) " +
+                "VALUES (@username, @password, @active, @createDate, @createdBy, @lastUpdate, @lastUpdateBy)";
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand addUserCMD = new MySqlCommand(addUserQuery, connection);
+                addUserCMD.Parameters.AddWithValue("@username", username);
+                addUserCMD.Parameters.AddWithValue("@password", password);
+                addUserCMD.Parameters.AddWithValue("@active", active);
+                addUserCMD.Parameters.AddWithValue("@createDate", formatedDate);
+                addUserCMD.Parameters.AddWithValue("@createdBy", createdBy);
+                addUserCMD.Parameters.AddWithValue("@lastUpdate", formatedDate);
+                addUserCMD.Parameters.AddWithValue("@lastUpdateBy", createdBy);
+
+                addUserCMD.ExecuteNonQuery();
+
+                this.CloseConnection();
+            }
+
+        }
+        public void AddAppointment(string customerName, string userName, string title, string description, string location, string contact, string type, string URL, DateTime start, DateTime end, string createdBy)
+        {
+            DateTime stamp = TimeStamp();
+            string formatedDate = FormatDate(stamp);
+            string formatedStart = FormatDate(start);
+            string formatedEnd = FormatDate(end);
+            string getCustomerIdQuery = "SELECT customerId FROM customer WHERE customerName = @customerName";
+            string getUserIdQuery = "SELECT userId FROM user WHERE userName = @userName";
+            string addAppointmentQuery = "INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) " +
+                "VALUES (@customerId, @userId, @title, @description, @location, @contact, @type, @URL, @start, @end, @createDate, @createdBy, @lastUpdate, @lastUpdateBy)";
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand getCustomerIdCMD = new MySqlCommand(getCustomerIdQuery, connection);
+                getCustomerIdCMD.Parameters.AddWithValue("@customerName", customerName);
+
+                int customerId = int.Parse(getCustomerIdCMD.ExecuteScalar().ToString());
+
+                MySqlCommand getUserIdCMD = new MySqlCommand(getUserIdQuery, connection);
+                getUserIdCMD.Parameters.AddWithValue("@userName", userName);
+
+                int userId = int.Parse(getUserIdCMD.ExecuteScalar().ToString());
+
+
+                MySqlCommand addAppointmentCMD = new MySqlCommand(addAppointmentQuery, connection);
+                addAppointmentCMD.Parameters.AddWithValue("@customerId", customerId);
+                addAppointmentCMD.Parameters.AddWithValue("@userId", userId);
+                addAppointmentCMD.Parameters.AddWithValue("@title", title);
+                addAppointmentCMD.Parameters.AddWithValue("@description", description);
+                addAppointmentCMD.Parameters.AddWithValue("@location", location);
+                addAppointmentCMD.Parameters.AddWithValue("@contact", contact);
+                addAppointmentCMD.Parameters.AddWithValue("@type", title);
+                addAppointmentCMD.Parameters.AddWithValue("@URL", description);
+                addAppointmentCMD.Parameters.AddWithValue("@start", formatedStart); 
+                addAppointmentCMD.Parameters.AddWithValue("@end", formatedEnd); 
+                addAppointmentCMD.Parameters.AddWithValue("@createDate", formatedDate);
+                addAppointmentCMD.Parameters.AddWithValue("@createdBy", createdBy);
+                addAppointmentCMD.Parameters.AddWithValue("@lastUpdate", formatedDate);
+                addAppointmentCMD.Parameters.AddWithValue("@lastUpdateBy", createdBy);
+
+                addAppointmentCMD.ExecuteNonQuery();
+
+                this.CloseConnection();
+            }
+
+        }
+        public void ModifyCustomer(int customerId, string customerName, bool active, string address, string address2, int cityId, string postalCode, string phone, string createdBy)
+        {
+            DateTime stamp = TimeStamp();
+            string formatedDate = FormatDate(stamp);
+            string getAddressIDQuery = "SELECT addressId FROM customer WHERE customerId = @customerId";
+            string modAddressQuery = "UPDATE address SET address = @address, address2 = @address2,  postalCode= @postalCode, phone = @phone, lastUpdate = @formatedDate, lastUpdateBy = @createdby " +
+                "WHERE addressId = @returnedAddressId";
+            string modCustomerQuery = "UPDATE customer SET customerName = @customerName, active = @active, lastUpdate = @customerFormatedDate, lastUpdateBy = @customerCreatedBy " +
+                "WHERE customerId = @customerId";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand returnAddressIdCMD = new MySqlCommand(getAddressIDQuery, connection);
+                returnAddressIdCMD.Parameters.AddWithValue("@customerID", customerId);
+                int returnedAddressId = int.Parse(returnAddressIdCMD.ExecuteScalar().ToString());
+
+
+                MySqlCommand modAddressCMD = new MySqlCommand(modAddressQuery, connection);
+                modAddressCMD.Parameters.AddWithValue("@address", address);
+                modAddressCMD.Parameters.AddWithValue("@address2", address2);
+                modAddressCMD.Parameters.AddWithValue("@cityId", cityId);
+                modAddressCMD.Parameters.AddWithValue("@postalCode", postalCode);
+                modAddressCMD.Parameters.AddWithValue("@phone", phone);
+                modAddressCMD.Parameters.AddWithValue("@formatedDate", formatedDate);
+                modAddressCMD.Parameters.AddWithValue("@createdby", createdBy);
+                modAddressCMD.Parameters.AddWithValue("@returnedAddressId", returnedAddressId);
+                modAddressCMD.ExecuteNonQuery();
+
+
+                MySqlCommand modCustomerCMD = new MySqlCommand(modCustomerQuery, connection);
+                modCustomerCMD.Parameters.AddWithValue("@customerName", customerName);
+                modCustomerCMD.Parameters.AddWithValue("@customerReturnedAddressId", returnedAddressId);
+                modCustomerCMD.Parameters.AddWithValue("@active", active);
+                modCustomerCMD.Parameters.AddWithValue("@customerFormatedDate", formatedDate);
+                modCustomerCMD.Parameters.AddWithValue("@customerCreatedBy", createdBy);
+                modCustomerCMD.Parameters.AddWithValue("@customerId", customerId);
+                modCustomerCMD.ExecuteNonQuery();
+
+                this.CloseConnection();
+            }
+
+        }
+        public void ModifyUser(string userId, string username, string password, int active, string createdBy)
+        {
+            DateTime stamp = TimeStamp();
+            string formatedDate = FormatDate(stamp);
+            string modUserQuery = "UPDATE user SET userName = @userName, password = @password, active = @active, lastUpdate = @FormatedDate, lastUpdateBy = @CreatedBy " +
+                "WHERE userId = @userId";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand modUserCMD = new MySqlCommand(modUserQuery, connection);
+                modUserCMD.Parameters.AddWithValue("@userName", username);
+                modUserCMD.Parameters.AddWithValue("@password", password);
+                modUserCMD.Parameters.AddWithValue("@active", active);
+                modUserCMD.Parameters.AddWithValue("@FormatedDate", formatedDate);
+                modUserCMD.Parameters.AddWithValue("@CreatedBy", createdBy);
+                modUserCMD.Parameters.AddWithValue("@userId", userId);
+                modUserCMD.ExecuteNonQuery();
+
+
+                this.CloseConnection();
+            }
+
+        }
+
+
+        public void ModifyAppointment(int appointmentId, string customerName, string userName, string title, string description, string location, string contact, string type, string url, DateTime start, DateTime end, string createdBy)
+        {
+            DateTime stamp = TimeStamp();
+            string formatedDate = FormatDate(stamp);
+            string formatedStart = FormatDate(start);
+            string formatedEnd = FormatDate(end);
+            string getCustomerIdQuery = "SELECT customerId FROM customer WHERE customerName = @customerName";
+            string getUserIdQuery = "SELECT userId FROM user WHERE userName = @userName";
+            string modAppointmentQuery = "UPDATE appointment SET customerId = @customerId, userId = @userId, title = @title, description = @description, location = @location, contact = @contact, type = @type, url = @url, start = @start, end = @end, lastUpdate = @formatedDate, lastUpdateBy = @createdby " +
+                "WHERE appointmentId = @appointmentId";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand getCustomerIdCMD= new MySqlCommand(getCustomerIdQuery, connection);
+                getCustomerIdCMD.Parameters.AddWithValue("@customerName", customerName);
+                int returnedCustomerId = int.Parse(getCustomerIdCMD.ExecuteScalar().ToString());
+
+
+                MySqlCommand getUserIdCMD = new MySqlCommand(getUserIdQuery, connection);
+                getCustomerIdCMD.Parameters.AddWithValue("@userName", userName);
+                int returnedUserId = int.Parse(getCustomerIdCMD.ExecuteScalar().ToString());
+
+
+                MySqlCommand modAppointmentCMD = new MySqlCommand(modAppointmentQuery, connection);
+                modAppointmentCMD.Parameters.AddWithValue("@customerId", returnedCustomerId);
+                modAppointmentCMD.Parameters.AddWithValue("@userId", returnedUserId);
+                modAppointmentCMD.Parameters.AddWithValue("@title", title);
+                modAppointmentCMD.Parameters.AddWithValue("@description", description);
+                modAppointmentCMD.Parameters.AddWithValue("@location", location);
+                modAppointmentCMD.Parameters.AddWithValue("@contact", contact);
+                modAppointmentCMD.Parameters.AddWithValue("@type", type);
+                modAppointmentCMD.Parameters.AddWithValue("@url", url);
+                modAppointmentCMD.Parameters.AddWithValue("@start", formatedStart);
+                modAppointmentCMD.Parameters.AddWithValue("@end", formatedEnd);
+                modAppointmentCMD.Parameters.AddWithValue("@formatedDate", formatedDate);
+                modAppointmentCMD.Parameters.AddWithValue("@createdby", createdBy);
+                modAppointmentCMD.Parameters.AddWithValue("@appointmentId", appointmentId);
+                modAppointmentCMD.ExecuteNonQuery();
+
+
+                this.CloseConnection();
+            }
+
+        }
+        public bool DeleteCustomer(Customer customer)
+        {
+            
+            bool deleteResult = false;
+            Customer customerToDelete = customer;
+            string customerAppointmentsQuery = "SELECT COUNT(appointmentId) FROM appointment WHERE customerId = @appointmentCustomerId";
+            string returnAddressIdQuery = "SELECT addressId FROM customer WHERE customerId = @customerId";
+            string addressToDeleteQuery = "DELETE FROM address WHERE addressId = @addressId";
+            string customerToDeleteQuery = "DELETE FROM customer WHERE customerId = @customerId";
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand customerAppointmentCMD = new MySqlCommand(customerAppointmentsQuery, connection);
+                customerAppointmentCMD.Parameters.AddWithValue("appointmentCustomerId", customerToDelete.customerId);
+                int hasAppointment = int.Parse(customerAppointmentCMD.ExecuteScalar().ToString());
+
+                if (hasAppointment < 1)
+                {
+                    MySqlCommand returnAddressIdCMD = new MySqlCommand(returnAddressIdQuery, connection);
+                    returnAddressIdCMD.Parameters.AddWithValue("@customerID", customerToDelete.customerId);
+                    int returnedAddressId = int.Parse(returnAddressIdCMD.ExecuteScalar().ToString());
+
+                    MySqlCommand customerToDeleteCMD = new MySqlCommand(customerToDeleteQuery, connection);
+                    customerToDeleteCMD.Parameters.AddWithValue("@customerId", customerToDelete.customerId);
+                    customerToDeleteCMD.ExecuteNonQuery();
+
+
+                    MySqlCommand addressToDeleteCMD = new MySqlCommand(addressToDeleteQuery, connection);
+                    addressToDeleteCMD.Parameters.AddWithValue("@addressId", returnedAddressId);
+                    addressToDeleteCMD.ExecuteNonQuery();
+
+                    this.CloseConnection();
+                    deleteResult = true;
+                    return deleteResult;
+
+                }
+                else
+                {
+                    this.CloseConnection();
+                    deleteResult = false;
+                    return deleteResult;
+                }
+            }
+            deleteResult = false;
+            return deleteResult;
+        }
+        public bool DeleteUser(User user)
+        {
+
+            bool deleteResult = false;
+            User userToDelete = user;
+            string userAppointmentsQuery = "SELECT COUNT(appointmentId) FROM appointment WHERE userId = @appointmentUserID";
+            string userToDeleteQuery = "DELETE FROM user WHERE userId = @userId";
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand userAppointmentsCMD = new MySqlCommand(userAppointmentsQuery, connection);
+                userAppointmentsCMD.Parameters.AddWithValue("appointmentUserID", userToDelete.userID);
+                int hasAppointment = int.Parse(userAppointmentsCMD.ExecuteScalar().ToString());
+
+                if (hasAppointment < 1)
+                {
+                    MySqlCommand userToDeleteCMD = new MySqlCommand(userToDeleteQuery, connection);
+                    userToDeleteCMD.Parameters.AddWithValue("@userId", userToDelete.userID);
+                    userToDeleteCMD.ExecuteNonQuery();
+
+                    this.CloseConnection();
+                    deleteResult = true;
+                    return deleteResult;
+
+                }
+                else
+                {
+                    this.CloseConnection();
+                    deleteResult = false;
+                    return deleteResult;
+                }
+            }
+            deleteResult = false;
+            return deleteResult;
+        }
+        public void DeleteAppointment(Appointment appointment)
+        {
+            
+            Appointment appointmentToDelete = appointment;
+            string deleteAppointmentsQuery = "DELETE FROM appointment WHERE appointmentId = @appointmentId";
+
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand deleteAppointmentCMD = new MySqlCommand(deleteAppointmentsQuery, connection);
+                deleteAppointmentCMD.Parameters.AddWithValue("@appointmentId", appointmentToDelete.appointmentId);
+                deleteAppointmentCMD.ExecuteNonQuery();
+
+                this.CloseConnection();
+            }
+            this.CloseConnection();
+
+        }
+
 
 
 

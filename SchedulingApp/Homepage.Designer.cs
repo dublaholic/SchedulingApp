@@ -35,8 +35,8 @@ namespace SchedulingApp
             this.rdoMonth = new System.Windows.Forms.RadioButton();
             this.dgvSchedule = new System.Windows.Forms.DataGridView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.mnuSchedule = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCustomers = new System.Windows.Forms.ToolStripMenuItem();
+            this.usersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnAddAppointment = new System.Windows.Forms.Button();
             this.btnDeleteAppointment = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -65,6 +65,7 @@ namespace SchedulingApp
             this.rdoDay.TabStop = true;
             this.rdoDay.Text = "Day";
             this.rdoDay.UseVisualStyleBackColor = true;
+            this.rdoDay.CheckedChanged += new System.EventHandler(this.rdoDay_CheckedChanged);
             // 
             // rdoWeek
             // 
@@ -75,6 +76,7 @@ namespace SchedulingApp
             this.rdoWeek.TabIndex = 2;
             this.rdoWeek.Text = "Week";
             this.rdoWeek.UseVisualStyleBackColor = true;
+            this.rdoWeek.CheckedChanged += new System.EventHandler(this.rdoWeek_CheckedChanged);
             // 
             // rdoMonth
             // 
@@ -85,6 +87,7 @@ namespace SchedulingApp
             this.rdoMonth.TabIndex = 3;
             this.rdoMonth.Text = "Month";
             this.rdoMonth.UseVisualStyleBackColor = true;
+            this.rdoMonth.CheckedChanged += new System.EventHandler(this.rdoMonth_CheckedChanged);
             // 
             // dgvSchedule
             // 
@@ -103,20 +106,13 @@ namespace SchedulingApp
             // 
             this.menuStrip1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuSchedule,
-            this.mnuCustomers});
+            this.mnuCustomers,
+            this.usersToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 24);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
-            // 
-            // mnuSchedule
-            // 
-            this.mnuSchedule.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.mnuSchedule.Name = "mnuSchedule";
-            this.mnuSchedule.Size = new System.Drawing.Size(70, 20);
-            this.mnuSchedule.Text = "Schedule";
             // 
             // mnuCustomers
             // 
@@ -126,6 +122,14 @@ namespace SchedulingApp
             this.mnuCustomers.Text = "Customers";
             this.mnuCustomers.Click += new System.EventHandler(this.mnuCustomers_Click);
             // 
+            // usersToolStripMenuItem
+            // 
+            this.usersToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.usersToolStripMenuItem.Name = "usersToolStripMenuItem";
+            this.usersToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.usersToolStripMenuItem.Text = "Users";
+            this.usersToolStripMenuItem.Click += new System.EventHandler(this.usersToolStripMenuItem_Click);
+            // 
             // btnAddAppointment
             // 
             this.btnAddAppointment.Location = new System.Drawing.Point(71, 260);
@@ -134,6 +138,7 @@ namespace SchedulingApp
             this.btnAddAppointment.TabIndex = 7;
             this.btnAddAppointment.Text = "Add Appointment";
             this.btnAddAppointment.UseVisualStyleBackColor = true;
+            this.btnAddAppointment.Click += new System.EventHandler(this.btnAddAppointment_Click);
             // 
             // btnDeleteAppointment
             // 
@@ -143,6 +148,7 @@ namespace SchedulingApp
             this.btnDeleteAppointment.TabIndex = 8;
             this.btnDeleteAppointment.Text = "Delete Appointment";
             this.btnDeleteAppointment.UseVisualStyleBackColor = true;
+            this.btnDeleteAppointment.Click += new System.EventHandler(this.btnDeleteAppointment_Click);
             // 
             // groupBox1
             // 
@@ -179,6 +185,7 @@ namespace SchedulingApp
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.dgvSchedule);
             this.Name = "Homepage";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Scheduling Application";
             this.Load += new System.EventHandler(this.Homepage_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSchedule)).EndInit();
@@ -199,11 +206,11 @@ namespace SchedulingApp
         private System.Windows.Forms.RadioButton rdoMonth;
         private System.Windows.Forms.DataGridView dgvSchedule;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem mnuSchedule;
         private System.Windows.Forms.ToolStripMenuItem mnuCustomers;
         private System.Windows.Forms.Button btnAddAppointment;
         private System.Windows.Forms.Button btnDeleteAppointment;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnModifyAppointment;
+        private System.Windows.Forms.ToolStripMenuItem usersToolStripMenuItem;
     }
 }

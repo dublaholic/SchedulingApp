@@ -58,8 +58,8 @@ namespace SchedulingApp
                 activeCustomer = false;
 
             }
-            Customer modCustomer = new Customer(txtName.Text, txtAddress.Text, txtAddress2.Text, txtPostal.Text, txtPhone.Text, activeCustomer);
-            addCustomer.addCustomer(modCustomer.customerName, modCustomer.active, modCustomer.address, modCustomer.address2, cityID, modCustomer.postalCode, modCustomer.phone, loginUser.username);
+            
+            addCustomer.AddCustomer(txtName.Text, activeCustomer, txtAddress.Text, txtAddress2.Text, cityID, txtPostal.Text, txtPhone.Text, loginUser.username);
 
             this.Close();
             

@@ -19,7 +19,7 @@ namespace SchedulingApp
             InitializeComponent();
             FormatDGV(dgvSchedule);
             loginUser = user;
-            GetSchedule(loginUser.userID, monthCalendar.SelectionStart, monthCalendar.SelectionStart);
+            GetSchedule(loginUser.userID, monthCalendar.SelectionStart.Date);
             
             
         }
@@ -41,16 +41,31 @@ namespace SchedulingApp
         {
 
         }
-        private void GetSchedule(int userId, DateTime startDate, DateTime endDate)
+        private void GetSchedule(int userId, DateTime startDate)
         {
+
             DataAction appointmentData = new DataAction();
+            DateTime endDate = startDate.Date;
+            if (rdoDay.Checked == true)
+            {
+                endDate = startDate.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+            }
+            else if (rdoWeek.Checked == true)
+            {
+                endDate = startDate.Date.Date.AddDays(7).AddHours(23).AddMinutes(59).AddSeconds(59);
+            }
+            else if (rdoMonth.Checked == true)
+            {
+                endDate = startDate.Date.Date.AddMonths(1).AddHours(23).AddMinutes(59).AddSeconds(59);
+            }
+            
             dgvSchedule.DataSource = appointmentData.GetAppointments(userId, startDate, endDate);
             dgvSchedule.Refresh();
         }
 
         private void monthCalendar_DateChanged(object sender, DateRangeEventArgs e)
         {
-            GetSchedule(loginUser.userID, monthCalendar.SelectionStart, monthCalendar.SelectionEnd); 
+            GetSchedule(loginUser.userID, monthCalendar.SelectionStart); 
         }
 
         private void dgvSchedule_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -61,13 +76,71 @@ namespace SchedulingApp
         private void btnModifyAppointment_Click(object sender, EventArgs e)
         {
             Appointment modAppointment = (Appointment)dgvSchedule.CurrentRow.DataBoundItem;
-            new ManageAppointment(modAppointment).ShowDialog(); 
+            Form ManageAppointment = new ManageAppointment(modAppointment, loginUser);
+            ManageAppointment.FormClosed += Custom_FormClosed;
+            ManageAppointment.ShowDialog();
+
         }
 
         private void mnuCustomers_Click(object sender, EventArgs e)
         {
             Form Customers = new Customers(loginUser);
+            Customers.FormClosed += Custom_FormClosed;
             Customers.ShowDialog();
+        }
+
+        private void mnuSchedule_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void Custom_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            GetSchedule(loginUser.userID, monthCalendar.SelectionStart);
+        }
+
+        private void btnDeleteAppointment_Click(object sender, EventArgs e)
+        {
+            DialogResult deleteConf = MessageBox.Show("Selecting Ok will permenitly delete this record. Are you sure you would like to continue?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (deleteConf == DialogResult.OK)
+            {
+                DataAction deleteAppointment = new DataAction();
+                Appointment appointmentToDelete = (Appointment)dgvSchedule.CurrentRow.DataBoundItem;
+                deleteAppointment.DeleteAppointment(appointmentToDelete);
+                GetSchedule(loginUser.userID, monthCalendar.SelectionStart);
+
+            }
+            else
+            {
+                GetSchedule(loginUser.userID, monthCalendar.SelectionStart);
+            }
+        }
+        private void btnAddAppointment_Click(object sender, EventArgs e)
+        {
+            Form addAppointment = new AddAppointment(loginUser);
+            addAppointment.FormClosed += Custom_FormClosed;
+            addAppointment.ShowDialog();
+        }
+
+        private void rdoDay_CheckedChanged(object sender, EventArgs e)
+        {
+            GetSchedule(loginUser.userID, monthCalendar.SelectionStart);
+        }
+
+        private void rdoWeek_CheckedChanged(object sender, EventArgs e)
+        {
+            GetSchedule(loginUser.userID, monthCalendar.SelectionStart);
+        }
+
+        private void rdoMonth_CheckedChanged(object sender, EventArgs e)
+        {
+            GetSchedule(loginUser.userID, monthCalendar.SelectionStart);
+        }
+
+        private void usersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form Users = new Users(loginUser);
+            Users.FormClosed += Custom_FormClosed;
+            Users.ShowDialog();
         }
     }
 }

@@ -12,11 +12,13 @@ namespace SchedulingApp
 {
     public partial class ManageCustomer : Form
     {
-      //  int cityID;
-        public ManageCustomer(Customer modCustomer)
+        int cityID;
+        public User loginUser;
+        public ManageCustomer(Customer modCustomer, User user)
         {
             InitializeComponent();
             setupDropdowns();
+            loginUser = user;
             txtId.Text = modCustomer.customerId.ToString();
             txtName.Text = modCustomer.customerName;
             txtAddress.Text = modCustomer.address;
@@ -63,37 +65,55 @@ namespace SchedulingApp
 
         private void cmbCity_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //switch (cmbCity.SelectedItem)
-            //{
-            //    case "New York":
-            //        cmbCountry.SelectedItem = "US";
-            //        cityID = 2;
-            //        break;
-            //    case "Los Angeles":
-            //        cmbCountry.SelectedItem = "US";
-            //        cityID = 2;
-            //        break;
-            //    case "Toronto":
-            //        cmbCountry.SelectedItem = "Canada";
-            //        cityID = 3;
-            //        break;
-            //    case "Vancouver":
-            //        cmbCountry.SelectedItem = "Canada";
-            //        cityID = 4;
-            //        break;
-            //    case "Oslo":
-            //        cmbCountry.SelectedItem = "Norway";
-            //        cityID = 5;
-            //        break;
-            //    default:
-            //        cmbCountry.SelectedItem = "";
-            //        cityID = -1;
-            //        break;
+            switch (cmbCity.SelectedItem)
+            {
+                case "New York":
+                    cmbCountry.SelectedItem = "US";
+                    cityID = 2;
+                    break;
+                case "Los Angeles":
+                    cmbCountry.SelectedItem = "US";
+                    cityID = 2;
+                    break;
+                case "Toronto":
+                    cmbCountry.SelectedItem = "Canada";
+                    cityID = 3;
+                    break;
+                case "Vancouver":
+                    cmbCountry.SelectedItem = "Canada";
+                    cityID = 4;
+                    break;
+                case "Oslo":
+                    cmbCountry.SelectedItem = "Norway";
+                    cityID = 5;
+                    break;
+                default:
+                    cmbCountry.SelectedItem = "";
+                    cityID = -1;
+                    break;
 
 
-                   
-            //}
+
+            }
         }
-            
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            bool activeCustomer;
+            DataAction modCustomer = new DataAction();
+
+            if (chkActive.Checked == true)
+            {
+                activeCustomer = true;
+            }
+            else
+            {
+                activeCustomer = false;
+
+            }
+
+            modCustomer.ModifyCustomer(Int32.Parse(txtId.Text), txtName.Text, activeCustomer, txtAddress.Text, txtAddress2.Text, cityID, txtPostal.Text, txtPhone.Text, loginUser.username);
+            this.Close();
+        }
     }
 }

@@ -44,15 +44,15 @@ namespace SchedulingApp
             this.label8 = new System.Windows.Forms.Label();
             this.txtURL = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.txtStart = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.txtEnd = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.cmbCustomerName = new System.Windows.Forms.ComboBox();
             this.cmbUserName = new System.Windows.Forms.ComboBox();
-            this.txtType = new System.Windows.Forms.TextBox();
+            this.dtpStart = new System.Windows.Forms.DateTimePicker();
+            this.dtpEnd = new System.Windows.Forms.DateTimePicker();
+            this.cmbType = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label1
@@ -180,33 +180,19 @@ namespace SchedulingApp
             this.label9.TabIndex = 16;
             this.label9.Text = "URL:";
             // 
-            // txtStart
-            // 
-            this.txtStart.Location = new System.Drawing.Point(140, 404);
-            this.txtStart.Name = "txtStart";
-            this.txtStart.Size = new System.Drawing.Size(100, 20);
-            this.txtStart.TabIndex = 19;
-            // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(76, 404);
+            this.label10.Location = new System.Drawing.Point(53, 401);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(58, 13);
             this.label10.TabIndex = 18;
             this.label10.Text = "Start Time:";
             // 
-            // txtEnd
-            // 
-            this.txtEnd.Location = new System.Drawing.Point(140, 446);
-            this.txtEnd.Name = "txtEnd";
-            this.txtEnd.Size = new System.Drawing.Size(100, 20);
-            this.txtEnd.TabIndex = 21;
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(79, 446);
+            this.label11.Location = new System.Drawing.Point(56, 443);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(55, 13);
             this.label11.TabIndex = 20;
@@ -220,6 +206,7 @@ namespace SchedulingApp
             this.btnSave.TabIndex = 22;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnCancel
             // 
@@ -233,6 +220,7 @@ namespace SchedulingApp
             // 
             // cmbCustomerName
             // 
+            this.cmbCustomerName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCustomerName.FormattingEnabled = true;
             this.cmbCustomerName.Location = new System.Drawing.Point(140, 78);
             this.cmbCustomerName.Name = "cmbCustomerName";
@@ -241,35 +229,57 @@ namespace SchedulingApp
             // 
             // cmbUserName
             // 
+            this.cmbUserName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbUserName.FormattingEnabled = true;
             this.cmbUserName.Location = new System.Drawing.Point(140, 115);
             this.cmbUserName.Name = "cmbUserName";
             this.cmbUserName.Size = new System.Drawing.Size(121, 21);
             this.cmbUserName.TabIndex = 25;
             // 
-            // txtType
+            // dtpStart
             // 
-            this.txtType.Location = new System.Drawing.Point(140, 315);
-            this.txtType.Name = "txtType";
-            this.txtType.Size = new System.Drawing.Size(100, 20);
-            this.txtType.TabIndex = 15;
+            this.dtpStart.Location = new System.Drawing.Point(117, 401);
+            this.dtpStart.Name = "dtpStart";
+            this.dtpStart.Size = new System.Drawing.Size(200, 20);
+            this.dtpStart.TabIndex = 26;
+            // 
+            // dtpEnd
+            // 
+            this.dtpEnd.Location = new System.Drawing.Point(117, 443);
+            this.dtpEnd.Name = "dtpEnd";
+            this.dtpEnd.Size = new System.Drawing.Size(200, 20);
+            this.dtpEnd.TabIndex = 27;
+            // 
+            // cmbType
+            // 
+            this.cmbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbType.FormattingEnabled = true;
+            this.cmbType.Items.AddRange(new object[] {
+            "Test",
+            "Any10",
+            "Any30",
+            "Any60"});
+            this.cmbType.Location = new System.Drawing.Point(140, 315);
+            this.cmbType.Name = "cmbType";
+            this.cmbType.Size = new System.Drawing.Size(121, 21);
+            this.cmbType.TabIndex = 53;
             // 
             // ManageAppointment
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(335, 548);
+            this.ClientSize = new System.Drawing.Size(349, 548);
+            this.Controls.Add(this.cmbType);
+            this.Controls.Add(this.dtpEnd);
+            this.Controls.Add(this.dtpStart);
             this.Controls.Add(this.cmbUserName);
             this.Controls.Add(this.cmbCustomerName);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.txtEnd);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.txtStart);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.txtURL);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.txtType);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.txtContact);
             this.Controls.Add(this.label7);
@@ -284,6 +294,7 @@ namespace SchedulingApp
             this.Controls.Add(this.txtAppointmentId);
             this.Controls.Add(this.label1);
             this.Name = "ManageAppointment";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Manage Appointment";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -307,14 +318,14 @@ namespace SchedulingApp
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtURL;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox txtStart;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox txtEnd;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.ComboBox cmbCustomerName;
         private System.Windows.Forms.ComboBox cmbUserName;
-        private System.Windows.Forms.TextBox txtType;
+        private System.Windows.Forms.DateTimePicker dtpStart;
+        private System.Windows.Forms.DateTimePicker dtpEnd;
+        private System.Windows.Forms.ComboBox cmbType;
     }
 }

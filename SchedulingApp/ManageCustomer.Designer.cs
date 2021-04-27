@@ -164,7 +164,9 @@ namespace SchedulingApp
             // 
             // cmbCity
             // 
+            this.cmbCity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCity.FormattingEnabled = true;
+            this.cmbCity.IntegralHeight = false;
             this.cmbCity.Location = new System.Drawing.Point(124, 204);
             this.cmbCity.Name = "cmbCity";
             this.cmbCity.Size = new System.Drawing.Size(121, 21);
@@ -212,6 +214,7 @@ namespace SchedulingApp
             this.btnSave.TabIndex = 18;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnCancel
             // 
@@ -249,6 +252,7 @@ namespace SchedulingApp
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "ManageCustomer";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Manage Customer";
             this.ResumeLayout(false);
             this.PerformLayout();

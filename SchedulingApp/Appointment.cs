@@ -8,7 +8,7 @@ namespace SchedulingApp
 {
     public class Appointment
     {
-        public int  appointmentId {get; set;} 
+        public int appointmentId { get; set; }
         public string customerName { get; set; }
         public string userName { get; set; }
         public string title { get; set; }
@@ -19,6 +19,7 @@ namespace SchedulingApp
         public string URL { get; set; }
         public DateTime start { get; set; }
         public DateTime end { get; set; }
+
 
     }
 }

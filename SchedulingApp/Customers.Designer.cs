@@ -66,6 +66,7 @@ namespace SchedulingApp
             this.btnDelete.TabIndex = 2;
             this.btnDelete.Text = "Delete Customer";
             this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnModify
             // 
@@ -85,6 +86,7 @@ namespace SchedulingApp
             this.btnClose.TabIndex = 4;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // Customers
             // 
@@ -97,7 +99,7 @@ namespace SchedulingApp
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.dgvCustomers);
             this.Name = "Customers";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Customers";
             ((System.ComponentModel.ISupportInitialize)(this.dgvCustomers)).EndInit();
             this.ResumeLayout(false);

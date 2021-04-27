@@ -52,11 +52,11 @@ namespace SchedulingApp
         private void btnModify_Click(object sender, EventArgs e)
         {
             Customer modCustomer = (Customer)dgvCustomers.CurrentRow.DataBoundItem;
-            ManageCustomer manageCustomer = new ManageCustomer(modCustomer);
+            ManageCustomer manageCustomer = new ManageCustomer(modCustomer, loginUser);
             manageCustomer.FormClosed += Customer_FormClosed;
             manageCustomer.Show();
             
-            GetCustomerList();
+
         }
         private void Customer_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -68,6 +68,37 @@ namespace SchedulingApp
             Form addCustomer = new AddCustomer(loginUser);
             addCustomer.FormClosed += Customer_FormClosed;
             addCustomer.ShowDialog();
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            DialogResult deleteConf = MessageBox.Show("Selecting Ok will permenitly delete this record. Are you sure you would like to continue?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (deleteConf == DialogResult.OK)
+            {
+                DataAction deleteCustomer = new DataAction();
+                Customer customerToDelete = (Customer)dgvCustomers.CurrentRow.DataBoundItem;
+                bool deleteResult = deleteCustomer.DeleteCustomer(customerToDelete);
+                if (deleteResult == true)
+                {
+                    MessageBox.Show("Successfully deleted customer!", "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    GetCustomerList();
+                }
+                else if (deleteResult == false)
+                {
+                    MessageBox.Show("Unable to delete the customer! Please make sure all appointments for the customer are deleted!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    GetCustomerList();
+                }
+            }
+            else
+            {
+                GetCustomerList();
+            }
+           
         }
     }
 }

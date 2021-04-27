@@ -34,7 +34,6 @@ namespace SchedulingApp
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.btnSubmit = new System.Windows.Forms.Button();
-            this.btnRegister = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
             this.lblErrorText = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -69,6 +68,7 @@ namespace SchedulingApp
             // 
             this.txtPassword.Location = new System.Drawing.Point(110, 98);
             this.txtPassword.Name = "txtPassword";
+            this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(122, 20);
             this.txtPassword.TabIndex = 3;
             // 
@@ -82,19 +82,9 @@ namespace SchedulingApp
             this.btnSubmit.UseVisualStyleBackColor = true;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
-            // btnRegister
-            // 
-            this.btnRegister.Location = new System.Drawing.Point(132, 159);
-            this.btnRegister.Name = "btnRegister";
-            this.btnRegister.Size = new System.Drawing.Size(75, 23);
-            this.btnRegister.TabIndex = 5;
-            this.btnRegister.Text = "Register";
-            this.btnRegister.UseVisualStyleBackColor = true;
-            this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
-            // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(88, 218);
+            this.btnExit.Location = new System.Drawing.Point(140, 159);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(75, 23);
             this.btnExit.TabIndex = 6;
@@ -118,16 +108,16 @@ namespace SchedulingApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(255, 301);
+            this.ClientSize = new System.Drawing.Size(255, 238);
             this.Controls.Add(this.lblErrorText);
             this.Controls.Add(this.btnExit);
-            this.Controls.Add(this.btnRegister);
             this.Controls.Add(this.btnSubmit);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.txtUsername);
             this.Controls.Add(this.lblPasswaord);
             this.Controls.Add(this.lblUsername);
             this.Name = "Login";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login";
             this.Load += new System.EventHandler(this.Login_Load);
             this.ResumeLayout(false);
@@ -142,7 +132,6 @@ namespace SchedulingApp
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Button btnSubmit;
-        private System.Windows.Forms.Button btnRegister;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Label lblErrorText;
     }

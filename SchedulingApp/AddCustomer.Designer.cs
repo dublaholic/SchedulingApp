@@ -72,6 +72,8 @@ namespace SchedulingApp
             // chkActive
             // 
             this.chkActive.AutoSize = true;
+            this.chkActive.Checked = true;
+            this.chkActive.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkActive.Location = new System.Drawing.Point(140, 369);
             this.chkActive.Name = "chkActive";
             this.chkActive.Size = new System.Drawing.Size(15, 14);
@@ -103,6 +105,7 @@ namespace SchedulingApp
             // 
             // cmbCity
             // 
+            this.cmbCity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCity.FormattingEnabled = true;
             this.cmbCity.Location = new System.Drawing.Point(140, 170);
             this.cmbCity.Name = "cmbCity";
@@ -227,6 +230,7 @@ namespace SchedulingApp
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Name = "AddCustomer";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Add Customer";
             this.Load += new System.EventHandler(this.AddCustomer_Load);
             this.ResumeLayout(false);
