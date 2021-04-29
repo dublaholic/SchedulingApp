@@ -18,7 +18,7 @@ namespace SchedulingApp
         private const string password = "53688806600";
         private const string connectionString = "SERVER=" + server + ";" + "DATABASE=" + database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
         private MySqlConnection connection = new MySqlConnection(connectionString);
-        
+
 
         private bool OpenConnection()
         {
@@ -27,7 +27,7 @@ namespace SchedulingApp
                 connection.Open();
                 return true;
             }
-            catch(MySqlException ex)
+            catch (MySqlException ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -40,26 +40,29 @@ namespace SchedulingApp
                 connection.Close();
                 return true;
             }
-            catch(MySqlException ex)
+            catch (MySqlException ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            return false; 
+            return false;
         }
-        
+
+
+//VERIFICATION
+
         public int VerifyUser(string username, string password)
         {
             int verificationResult = -1;
             string queryReturn;
             string userQuery = "SELECT EXISTS(SELECT userId FROM user WHERE userName = @username and password = @password)";
-            if(this.OpenConnection() == true)
+            if (this.OpenConnection() == true)
             {
                 MySqlCommand userCMD = new MySqlCommand(userQuery, connection);
                 userCMD.Parameters.AddWithValue("@username", username);
                 userCMD.Parameters.AddWithValue("@password", password);
                 queryReturn = userCMD.ExecuteScalar().ToString();
-                
-                if(queryReturn == "1")
+
+                if (queryReturn == "1")
                 {
                     string userIdQuery = "SELECT userId FROM user WHERE userName = @username and password = @password";
                     MySqlCommand userIdCMD = new MySqlCommand(userIdQuery, connection);
@@ -69,16 +72,19 @@ namespace SchedulingApp
                 }
                 else
                 {
-                    verificationResult = -1; 
+                    verificationResult = -1;
                 }
                 this.CloseConnection();
-                return verificationResult; 
+                return verificationResult;
             }
             else
             {
                 return verificationResult;
             }
         }
+
+
+//GETS
 
         public List<Appointment> GetAppointments(int userId, DateTime startDate, DateTime endDate)
         {
@@ -90,12 +96,12 @@ namespace SchedulingApp
             {
                 MySqlCommand appointmentCMD = new MySqlCommand(appointmentQuery, connection);
                 appointmentCMD.Parameters.AddWithValue("@userId", userId);
-                appointmentCMD.Parameters.AddWithValue("@startDate", startDate);
-                appointmentCMD.Parameters.AddWithValue("@endDate", endDate);
+                appointmentCMD.Parameters.AddWithValue("@startDate", ToUTC(startDate));
+                appointmentCMD.Parameters.AddWithValue("@endDate", ToUTC(endDate));
 
                 using (MySqlDataReader rdr = appointmentCMD.ExecuteReader())
                 {
-                    while(rdr.Read())
+                    while (rdr.Read())
                     {
                         appointment.Add(new Appointment()
                         {
@@ -108,14 +114,14 @@ namespace SchedulingApp
                             contact = rdr["contact"].ToString(),
                             type = rdr["type"].ToString(),
                             URL = rdr["url"].ToString(),
-                            start = DateTime.Parse(rdr["start"].ToString()),
-                            end = DateTime.Parse(rdr["start"].ToString())
+                            start = TimeZone.CurrentTimeZone.ToLocalTime(DateTime.Parse(rdr["start"].ToString())),
+                            end = TimeZone.CurrentTimeZone.ToLocalTime(DateTime.Parse(rdr["start"].ToString()))
 
-                        }) ; 
+                        });
                     }
                 }
                 this.CloseConnection();
-                return appointment; 
+                return appointment;
             }
             else
             {
@@ -127,14 +133,14 @@ namespace SchedulingApp
             List<Customer> customers = new List<Customer>();
             string customerQuery = "SELECT customer.customerId, customer.customerName, address.address, address.address2, city.city, country.country, address.postalCode, address.phone, customer.active" +
                 " FROM customer LEFT JOIN address ON address.addressId = customer.addressId LEFT JOIN city ON address.cityId = city.cityId LEFT JOIN country ON city.countryId = country.countryId";
-            
+
             if (this.OpenConnection() == true)
             {
                 MySqlCommand customerCMD = new MySqlCommand(customerQuery, connection);
 
                 using (MySqlDataReader rdr = customerCMD.ExecuteReader())
                 {
-                    while(rdr.Read())
+                    while (rdr.Read())
                     {
                         customers.Add(new Customer()
                         {
@@ -162,7 +168,7 @@ namespace SchedulingApp
         {
             List<User> users = new List<User>();
             string usersQuery = "SELECT userId, userName, password, active FROM user";
-                
+
 
             if (this.OpenConnection() == true)
             {
@@ -179,7 +185,7 @@ namespace SchedulingApp
                             password = rdr["password"].ToString(),
                             active = int.Parse(rdr["active"].ToString())
 
-                        }); 
+                        });
                     }
                 }
                 this.CloseConnection();
@@ -194,20 +200,20 @@ namespace SchedulingApp
         {
             List<string> options = new List<string>();
             string getAppointmentDropdownQuery = "SELECT customerName FROM customer";
-            
+
 
             if (this.OpenConnection() == true)
             {
                 MySqlCommand optionCMD = new MySqlCommand(getAppointmentDropdownQuery, connection);
-                
-               
+
+
                 using (MySqlDataReader rdr = optionCMD.ExecuteReader())
                 {
                     while (rdr.Read())
                     {
                         options.Add(rdr["customerName"].ToString());
-                      
-                        
+
+
                     }
                 }
                 this.CloseConnection();
@@ -223,12 +229,12 @@ namespace SchedulingApp
         {
             List<string> options = new List<string>();
             string getAppointmentDropdownQuery = "SELECT userName FROM user";
-            
+
 
             if (this.OpenConnection() == true)
             {
                 MySqlCommand optionCMD = new MySqlCommand(getAppointmentDropdownQuery, connection);
-                
+
 
                 using (MySqlDataReader rdr = optionCMD.ExecuteReader())
                 {
@@ -304,6 +310,9 @@ namespace SchedulingApp
                 return options;
             }
         }
+
+//ADDS
+
         public void AddCustomer(string customerName, bool active, string address, string address2, int cityId, string postalCode, string phone, string createdBy)
         {
             DateTime stamp = TimeStamp();
@@ -313,7 +322,7 @@ namespace SchedulingApp
             string getLastAddressId = "SELECT MAX(addressId) FROM address";
             string addCustomer = "INSERT INTO customer(customerName, addressId, active, createDate, createdBy, lastUpdateBy) " +
                 "VALUES (@customerName, @addressId, @active, @createDate, @createdBy, @customerLastUpdateBy)";
-            if(this.OpenConnection() == true)
+            if (this.OpenConnection() == true)
             {
                 MySqlCommand addAddressCMD = new MySqlCommand(addAddressQuery, connection);
                 addAddressCMD.Parameters.AddWithValue("@address", address);
@@ -373,8 +382,8 @@ namespace SchedulingApp
         {
             DateTime stamp = TimeStamp();
             string formatedDate = FormatDate(stamp);
-            string formatedStart = FormatDate(start);
-            string formatedEnd = FormatDate(end);
+            string formatedStart = FormatDate(ToUTC(start));
+            string formatedEnd = FormatDate(ToUTC(end));
             string getCustomerIdQuery = "SELECT customerId FROM customer WHERE customerName = @customerName";
             string getUserIdQuery = "SELECT userId FROM user WHERE userName = @userName";
             string addAppointmentQuery = "INSERT INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) " +
@@ -402,8 +411,8 @@ namespace SchedulingApp
                 addAppointmentCMD.Parameters.AddWithValue("@contact", contact);
                 addAppointmentCMD.Parameters.AddWithValue("@type", title);
                 addAppointmentCMD.Parameters.AddWithValue("@URL", description);
-                addAppointmentCMD.Parameters.AddWithValue("@start", formatedStart); 
-                addAppointmentCMD.Parameters.AddWithValue("@end", formatedEnd); 
+                addAppointmentCMD.Parameters.AddWithValue("@start", formatedStart);
+                addAppointmentCMD.Parameters.AddWithValue("@end", formatedEnd);
                 addAppointmentCMD.Parameters.AddWithValue("@createDate", formatedDate);
                 addAppointmentCMD.Parameters.AddWithValue("@createdBy", createdBy);
                 addAppointmentCMD.Parameters.AddWithValue("@lastUpdate", formatedDate);
@@ -413,8 +422,11 @@ namespace SchedulingApp
 
                 this.CloseConnection();
             }
-
         }
+
+
+        //MODIFIES 
+
         public void ModifyCustomer(int customerId, string customerName, bool active, string address, string address2, int cityId, string postalCode, string phone, string createdBy)
         {
             DateTime stamp = TimeStamp();
@@ -478,28 +490,26 @@ namespace SchedulingApp
             }
 
         }
-
-
         public void ModifyAppointment(int appointmentId, string customerName, string userName, string title, string description, string location, string contact, string type, string url, DateTime start, DateTime end, string createdBy)
         {
             DateTime stamp = TimeStamp();
             string formatedDate = FormatDate(stamp);
-            string formatedStart = FormatDate(start);
-            string formatedEnd = FormatDate(end);
+            string formatedStart = FormatDate(ToUTC(start));
+            string formatedEnd = FormatDate(ToUTC(end));
             string getCustomerIdQuery = "SELECT customerId FROM customer WHERE customerName = @customerName";
             string getUserIdQuery = "SELECT userId FROM user WHERE userName = @userName";
             string modAppointmentQuery = "UPDATE appointment SET customerId = @customerId, userId = @userId, title = @title, description = @description, location = @location, contact = @contact, type = @type, url = @url, start = @start, end = @end, lastUpdate = @formatedDate, lastUpdateBy = @createdby " +
                 "WHERE appointmentId = @appointmentId";
             if (this.OpenConnection() == true)
             {
-                MySqlCommand getCustomerIdCMD= new MySqlCommand(getCustomerIdQuery, connection);
+                MySqlCommand getCustomerIdCMD = new MySqlCommand(getCustomerIdQuery, connection);
                 getCustomerIdCMD.Parameters.AddWithValue("@customerName", customerName);
                 int returnedCustomerId = int.Parse(getCustomerIdCMD.ExecuteScalar().ToString());
 
 
                 MySqlCommand getUserIdCMD = new MySqlCommand(getUserIdQuery, connection);
-                getCustomerIdCMD.Parameters.AddWithValue("@userName", userName);
-                int returnedUserId = int.Parse(getCustomerIdCMD.ExecuteScalar().ToString());
+                getUserIdCMD.Parameters.AddWithValue("@userName", userName);
+                int returnedUserId = int.Parse(getUserIdCMD.ExecuteScalar().ToString());
 
 
                 MySqlCommand modAppointmentCMD = new MySqlCommand(modAppointmentQuery, connection);
@@ -518,14 +528,15 @@ namespace SchedulingApp
                 modAppointmentCMD.Parameters.AddWithValue("@appointmentId", appointmentId);
                 modAppointmentCMD.ExecuteNonQuery();
 
-
                 this.CloseConnection();
             }
-
         }
+
+//DELETS    
+
         public bool DeleteCustomer(Customer customer)
         {
-            
+
             bool deleteResult = false;
             Customer customerToDelete = customer;
             string customerAppointmentsQuery = "SELECT COUNT(appointmentId) FROM appointment WHERE customerId = @appointmentCustomerId";
@@ -606,7 +617,7 @@ namespace SchedulingApp
         }
         public void DeleteAppointment(Appointment appointment)
         {
-            
+
             Appointment appointmentToDelete = appointment;
             string deleteAppointmentsQuery = "DELETE FROM appointment WHERE appointmentId = @appointmentId";
 
@@ -625,20 +636,160 @@ namespace SchedulingApp
 
 
 
+        //REMINDER
+
+        public List<Appointment> GetReminders(int userId)
+        {
+            List<Appointment> appointmentReminder = new List<Appointment>();
+            DateTime stamp = TimeStamp();
+            string formatedDate = FormatDate(stamp);
+
+            string getReminderQuery = "SELECT * FROM appointment JOIN user on user.userId = appointment.userId JOIN customer on customer.customerId = appointment.customerId WHERE user.userId = @userId";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand getReminderCMD = new MySqlCommand(getReminderQuery, connection);
+                getReminderCMD.Parameters.AddWithValue("@userId", userId);
+                getReminderCMD.Parameters.AddWithValue("@currentTime", formatedDate);
+                getReminderCMD.ExecuteNonQuery();
+
+                using (MySqlDataReader rdr = getReminderCMD.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        appointmentReminder.Add(new Appointment()
+                        {
+                            appointmentId = int.Parse(rdr["appointmentId"].ToString()),
+                            customerName = rdr["customerName"].ToString(),
+                            userName = rdr["userName"].ToString(),
+                            title = rdr["title"].ToString(),
+                            description = rdr["description"].ToString(),
+                            location = rdr["location"].ToString(),
+                            contact = rdr["contact"].ToString(),
+                            type = rdr["type"].ToString(),
+                            URL = rdr["url"].ToString(),
+                            start = TimeZone.CurrentTimeZone.ToLocalTime(DateTime.Parse((rdr["start"].ToString()))),
+                            end = TimeZone.CurrentTimeZone.ToLocalTime(DateTime.Parse((rdr["end"].ToString())))
+                        });
+                    }
+                }
+                this.CloseConnection();
+                return appointmentReminder;
+
+            }
+            else
+            {
+                this.CloseConnection();
+                return appointmentReminder;
+            }
+        }
 
 
 
 
+
+        //REPORTS
+
+        public List<string> GetAppointmentReport(int month)
+        {
+            string appointmentReportQuery = "SELECT type, count(appointmentId) FROM appointment WHERE MONTH(start) = @month GROUP BY type";
+            List<string> result = new List<string>(); 
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand appointmentReportCMD = new MySqlCommand(appointmentReportQuery, connection);
+                appointmentReportCMD.Parameters.AddWithValue("@month", month);
+
+                appointmentReportCMD.ExecuteNonQuery();
+
+                using (MySqlDataReader rdr = appointmentReportCMD.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        result.Add("Appointment Type: " + rdr["type"].ToString() + " -  Number of Appointments: " + rdr["count(appointmentId)"].ToString());
+                    }
+
+                }
+                this.CloseConnection();
+                return result;
+            }
+            this.CloseConnection();
+            return result;
+        }
+
+        public List<string> GetScheduleReport(int userId)
+        {
+            string scheduleReportQuery = "SELECT customer.customerName, appointment.title, appointment.description, appointment.location, appointment.contact, appointment.type, appointment.url, appointment.start, appointment.end " +
+                " FROM appointment JOIN customer on customer.customerId = appointment.customerId WHERE userId = @userId";
+            List<string> result = new List<string>();
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand scheduleReportCMD = new MySqlCommand(scheduleReportQuery, connection);
+                scheduleReportCMD.Parameters.AddWithValue("@userId", userId);
+                
+                scheduleReportCMD.ExecuteNonQuery();
+
+                using (MySqlDataReader rdr = scheduleReportCMD.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        result.Add(" Customer Name: " + rdr["customerName"].ToString() + " -  Title: " + rdr["title"].ToString() + " -  Description: " + rdr["description"].ToString() + " -  Location: " + rdr["location"].ToString() + " -  Contact: " + rdr["contact"].ToString() + " -  Type: " + rdr["type"].ToString() + " -  URL: " + rdr["url"].ToString() + " -  Start: " + rdr["start"].ToString() + " -  End: " + rdr["end"].ToString());
+                    }
+
+                }
+                this.CloseConnection();
+                return result;
+            }
+            this.CloseConnection();
+            return result;
+
+        }
+
+        public List<string> GetCustomerReport()
+        {
+            string customerAuditReportQuery = "SELECT customerName, active, createDate, createdBy, lastUpdate, lastUpdateBy FROM customer";
+            List<string> result = new List<string>();
+
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand customerAuditReportCMD = new MySqlCommand(customerAuditReportQuery, connection);
+
+
+                customerAuditReportCMD.ExecuteNonQuery();
+
+                using (MySqlDataReader rdr = customerAuditReportCMD.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        result.Add("Customer Name: " + rdr["customerName"].ToString() + " -  Active: " + rdr["active"].ToString() + " -  Created Date: " + rdr["createDate"].ToString() + " -  Created By: " + rdr["createdBy"].ToString() + " -  Last Update: " + rdr["lastUpdate"].ToString() + " -  Last Updated By: " + rdr["lastUpdateBy"].ToString());
+                    }
+
+                }
+                this.CloseConnection();
+                return result;
+            }
+            this.CloseConnection();
+            return result;
+        }
+
+
+
+
+
+        //MISC
 
         public DateTime TimeStamp()
         {
             return DateTime.Now.ToUniversalTime();
         }
+        public DateTime ToUTC(DateTime value)
+        {
+            return value.ToUniversalTime();
+        }
         public string FormatDate(DateTime value)
         {
             return value.ToString("yyyy-MM-dd HH:mm");
         }
-
         public void LogUserActivity(string userLog)
         {
             string docPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"log.txt");

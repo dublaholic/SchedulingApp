@@ -21,5 +21,29 @@ namespace SchedulingApp
         public DateTime end { get; set; }
 
 
+        public Appointment()
+        {
+
+        }
+        public Appointment(int _appointmentId, string _customerName, string _userName, string _title, string _description, string _location, string _contact, string _type, string _URL, DateTime _start, DateTime _end)
+        {
+            appointmentId = _appointmentId;
+            customerName = _customerName;
+            userName = _userName;
+            title = _title;
+            description = _description;
+            location = _location;
+            contact = _contact;
+            type = _type;
+            URL = _URL;
+            start = _start;
+            end = _end;
+        }
+        public Appointment(DateTime _start, string _type)
+        {
+            start = _start;
+            type = _type;
+        }
+
     }
 }

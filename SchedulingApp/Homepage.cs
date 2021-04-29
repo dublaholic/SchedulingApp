@@ -142,6 +142,13 @@ namespace SchedulingApp
             Users.FormClosed += Custom_FormClosed;
             Users.ShowDialog();
         }
+
+        private void reportsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form Reports = new Reports(loginUser);
+            Reports.FormClosed += Custom_FormClosed;
+            Reports.ShowDialog();
+        }
     }
 }
          

@@ -39,9 +39,9 @@ namespace SchedulingApp
         public void InitializeDateTimePicker()
         {
             dtpStart.Format = DateTimePickerFormat.Custom;
-            dtpStart.CustomFormat = "yyyy-MM-dd HH:mm";
+            dtpStart.CustomFormat = "yyyy-MM-dd hh:mm tt";
             dtpEnd.Format = DateTimePickerFormat.Custom;
-            dtpEnd.CustomFormat = "yyyy-MM-dd HH:mm";
+            dtpEnd.CustomFormat = "yyyy-MM-dd hh:mm tt";
 
         }
         private void btnCancel_Click(object sender, EventArgs e)

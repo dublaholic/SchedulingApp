@@ -30,15 +30,15 @@ namespace SchedulingApp
             txtContact.Text = modAppointment.contact.ToString();
             cmbType.Text = modAppointment.type.ToString();
             txtURL.Text = modAppointment.URL.ToString();
-            dtpStart.Text = modAppointment.start.ToString();
-            dtpEnd.Text = modAppointment.end.ToString();
+            dtpStart.Value = modAppointment.start;
+            dtpEnd.Value = modAppointment.end; 
         }
         public void InitializeDateTimePicker()
         {
             dtpStart.Format = DateTimePickerFormat.Custom;
-            dtpStart.CustomFormat = "yyyy-MM-dd HH:mm";
+            dtpStart.CustomFormat = "yyyy-MM-dd hh:mm tt";
             dtpEnd.Format = DateTimePickerFormat.Custom;
-            dtpEnd.CustomFormat = "yyyy-MM-dd HH:mm";
+            dtpEnd.CustomFormat = "yyyy-MM-dd hh:mm tt";
 
         }
         public void setupDropdowns()

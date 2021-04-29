@@ -72,6 +72,29 @@ namespace SchedulingApp
 
                 Form homepage = new Homepage(loginUser);
                 homepage.Show();
+
+                DataAction getReminders = new DataAction();
+                List<Appointment> getReminder = getReminders.GetReminders(loginUser.userID);
+                List<Appointment> Reminders = new List<Appointment>();
+
+                foreach (Appointment appt in getReminder)
+                {
+                    TimeSpan diff = appt.start.Subtract(DateTime.Now);
+                    if (diff.TotalMinutes <= 15 && diff.TotalMinutes >= -15)
+                    {
+                        Reminders.Add(appt);
+                    }
+                }
+                
+
+
+                if (Reminders.Count > 0)
+                {
+                    Form reminder = new Reminder(Reminders);
+                    reminder.Show();
+                }
+
+
                 this.Close();
                 
             }
