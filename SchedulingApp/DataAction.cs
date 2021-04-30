@@ -115,7 +115,7 @@ namespace SchedulingApp
                             type = rdr["type"].ToString(),
                             URL = rdr["url"].ToString(),
                             start = TimeZone.CurrentTimeZone.ToLocalTime(DateTime.Parse(rdr["start"].ToString())),
-                            end = TimeZone.CurrentTimeZone.ToLocalTime(DateTime.Parse(rdr["start"].ToString()))
+                            end = TimeZone.CurrentTimeZone.ToLocalTime(DateTime.Parse(rdr["end"].ToString()))
 
                         });
                     }
@@ -311,7 +311,31 @@ namespace SchedulingApp
             }
         }
 
-//ADDS
+        public int CheckDoubleBook(int userId, DateTime start, DateTime end)
+        {
+            string CheckDoubleBookQuery = "SELECT count(appointmentId) FROM appointment " +
+            " WHERE userId = @userId and start >= @startDate and start <= @endDate or end >= @startDate and end <= @endDate";
+            
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand CheckDoublebookCMD = new MySqlCommand(CheckDoubleBookQuery, connection);
+                CheckDoublebookCMD.Parameters.AddWithValue("@userId", userId);
+                CheckDoublebookCMD.Parameters.AddWithValue("@startDate", ToUTC(start));
+                CheckDoublebookCMD.Parameters.AddWithValue("@endDate", ToUTC(end));
+                int appointment = int.Parse(CheckDoublebookCMD.ExecuteScalar().ToString());
+
+                this.CloseConnection();
+                return appointment;
+            }
+            else
+            {
+                int appointment = -1;
+                return appointment;
+            }
+        }
+            
+
+        //ADDS
 
         public void AddCustomer(string customerName, bool active, string address, string address2, int cityId, string postalCode, string phone, string createdBy)
         {
@@ -423,6 +447,7 @@ namespace SchedulingApp
                 this.CloseConnection();
             }
         }
+
 
 
         //MODIFIES 
