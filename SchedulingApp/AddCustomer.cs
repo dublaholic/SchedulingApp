@@ -13,7 +13,13 @@ namespace SchedulingApp
     public partial class AddCustomer : Form
     {
         public User loginUser;
-        
+        bool txtNameValid = false;
+        bool txtAddressValid = false;
+        bool cmbCityValid = false;
+        bool txtPostalValid = false;
+        bool txtPhoneValid = false;
+
+
 
         int cityID;
         public AddCustomer(User user)
@@ -46,24 +52,88 @@ namespace SchedulingApp
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            bool activeCustomer;
-            DataAction addCustomer = new DataAction();
-            
-            if (chkActive.Checked == true)
+            bool validate = ValidateForm();
+            if (validate == true)
             {
-                activeCustomer = true;
+                bool activeCustomer;
+                DataAction addCustomer = new DataAction();
+
+                if (chkActive.Checked == true)
+                {
+                    activeCustomer = true;
+                }
+                else
+                {
+                    activeCustomer = false;
+
+                }
+
+                addCustomer.AddCustomer(txtName.Text, activeCustomer, txtAddress.Text, txtAddress2.Text, cityID, txtPostal.Text, txtPhone.Text, loginUser.username);
+
+                this.Close();
+            }
+            
+            
+        }
+        private bool ValidateForm()
+        {
+            if (string.IsNullOrWhiteSpace(txtName.Text))
+            {
+                txtName.BackColor = System.Drawing.Color.Salmon;
+                txtNameValid = false;
             }
             else
             {
-                activeCustomer = false;
-
+                txtName.BackColor = System.Drawing.Color.White;
+                txtNameValid = true;
             }
-            
-            addCustomer.AddCustomer(txtName.Text, activeCustomer, txtAddress.Text, txtAddress2.Text, cityID, txtPostal.Text, txtPhone.Text, loginUser.username);
+            if (string.IsNullOrWhiteSpace(txtAddress.Text))
+            {
+                txtAddress.BackColor = System.Drawing.Color.Salmon;
+                txtAddressValid = false;
+            }
+            else
+            {
+                txtAddress.BackColor = System.Drawing.Color.White;
+                txtAddressValid = true;
+            }
+            if (string.IsNullOrWhiteSpace(cmbCity.Text))
+            {
+                cmbCity.BackColor = System.Drawing.Color.Salmon;
+                cmbCityValid = false;
+            }
+            else
+            {
+                cmbCity.BackColor = System.Drawing.Color.White;
+                cmbCityValid = true;
+            }
+            if (string.IsNullOrWhiteSpace(txtPostal.Text))
+            {
+                txtPostal.BackColor = System.Drawing.Color.Salmon;
+                txtPostalValid = false;
+            }
+            else
+            {
+                txtPostal.BackColor = System.Drawing.Color.White;
+                txtPostalValid = true;
+            }
+            if (string.IsNullOrWhiteSpace(txtPhone.Text))
+            {
+                txtPhone.BackColor = System.Drawing.Color.Salmon;
+                txtPhoneValid = false;
+            }
+            else
+            {
+                txtPhone.BackColor = System.Drawing.Color.White;
+                txtPhoneValid = true;
+            }
 
-            this.Close();
-            
-            
+            if (txtNameValid == false || txtAddressValid == false || cmbCityValid == false || txtPostalValid == false || txtPhoneValid == false)
+            {
+                DialogResult fieldError = MessageBox.Show("Please fill in all required fields!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
         }
 
         private void AddCustomer_Load(object sender, EventArgs e)

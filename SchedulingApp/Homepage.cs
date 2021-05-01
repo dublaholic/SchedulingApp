@@ -20,6 +20,13 @@ namespace SchedulingApp
             FormatDGV(dgvSchedule);
             loginUser = user;
             GetSchedule(loginUser.userID, monthCalendar.SelectionStart.Date);
+            //Using statement lambda to make the greeting more efficient and simple to read/maintain 
+            Action<string> greet = loguser =>
+            {
+                string greeting = $"Hello {loguser}!";
+                lblGreet.Text = greeting;
+            };
+            greet(loginUser.username);
             
             
         }

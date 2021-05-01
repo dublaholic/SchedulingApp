@@ -76,15 +76,18 @@ namespace SchedulingApp
                 DataAction getReminders = new DataAction();
                 List<Appointment> getReminder = getReminders.GetReminders(loginUser.userID);
                 List<Appointment> Reminders = new List<Appointment>();
-
-                foreach (Appointment appt in getReminder)
+                
+                //Added a lambda expression to make the foreach simpler and eassier to read
+                getReminder.ForEach(x =>
                 {
-                    TimeSpan diff = appt.start.Subtract(DateTime.Now);
+                    TimeSpan diff = x.start.Subtract(DateTime.Now);
                     if (diff.TotalMinutes <= 15 && diff.TotalMinutes >= -15)
                     {
-                        Reminders.Add(appt);
+                        Reminders.Add(x);
                     }
-                }
+                });
+
+                
                 
 
 

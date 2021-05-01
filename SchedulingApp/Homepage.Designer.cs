@@ -43,6 +43,7 @@ namespace SchedulingApp
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnModifyAppointment = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
+            this.lblGreet = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSchedule)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -197,11 +198,21 @@ namespace SchedulingApp
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
+            // lblGreet
+            // 
+            this.lblGreet.AutoSize = true;
+            this.lblGreet.Location = new System.Drawing.Point(704, 38);
+            this.lblGreet.Name = "lblGreet";
+            this.lblGreet.Size = new System.Drawing.Size(35, 13);
+            this.lblGreet.TabIndex = 11;
+            this.lblGreet.Text = "label1";
+            // 
             // Homepage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lblGreet);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
@@ -236,5 +247,6 @@ namespace SchedulingApp
         private System.Windows.Forms.ToolStripMenuItem usersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reportsToolStripMenuItem;
         private System.Windows.Forms.Button btnExit;
+        private System.Windows.Forms.Label lblGreet;
     }
 }

@@ -14,6 +14,10 @@ namespace SchedulingApp
     {
         public User loginUser;
         public int isActive;
+        bool txtUsernameValid = false;
+        bool txtPasswordValid = false;
+
+
         public ManageUser(User modUser, User logUser)
         {
             InitializeComponent();
@@ -32,10 +36,14 @@ namespace SchedulingApp
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            DataAction modUser = new DataAction();
-            modUser.ModifyUser(txtUserId.Text, txtUsername.Text, txtPassword.Text, isActive, loginUser.username);
-            this.Close();
+            bool validate = ValidateForm();
 
+            if(validate == true)
+            {
+                DataAction modUser = new DataAction();
+                modUser.ModifyUser(txtUserId.Text, txtUsername.Text, txtPassword.Text, isActive, loginUser.username);
+                this.Close();
+            }
         }
 
         private void chkActive_CheckedChanged(object sender, EventArgs e)
@@ -48,6 +56,35 @@ namespace SchedulingApp
             {
                 isActive = 0;
             }
+        }
+        private bool ValidateForm()
+        {
+            if (string.IsNullOrWhiteSpace(txtUsername.Text))
+            {
+                txtUsername.BackColor = System.Drawing.Color.Salmon;
+                txtUsernameValid = false;
+            }
+            else
+            {
+                txtUsername.BackColor = System.Drawing.Color.White;
+                txtUsernameValid = true;
+            }
+            if (string.IsNullOrWhiteSpace(txtPassword.Text))
+            {
+                txtPassword.BackColor = System.Drawing.Color.Salmon;
+                txtPasswordValid = false;
+            }
+            else
+            {
+                txtPassword.BackColor = System.Drawing.Color.White;
+                txtPasswordValid = true;
+            }
+            if (txtUsernameValid == false || txtPasswordValid == false)
+            {
+                DialogResult fieldError = MessageBox.Show("Please fill in all required fields!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
         }
     }
 }

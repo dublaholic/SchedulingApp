@@ -12,7 +12,15 @@ namespace SchedulingApp
 {
     public partial class AddAppointment : Form
     {
-        public User loginUser; 
+        public User loginUser;
+        bool txtTitleValid = false;
+        bool txtDescriptionValid = false;
+        bool txtLocationValid = false;
+        bool txtContactValid = false;
+        bool txtURLValid = false;
+        bool cmbCustomerNameValid = false;
+        bool cmbUserNameValid = false;
+        bool cmbTypeValid = false;
         public AddAppointment(User user)
         {
             InitializeComponent();
@@ -72,12 +80,17 @@ namespace SchedulingApp
             DateTime localStart = dtpStart.Value;
             DateTime localEnd = dtpEnd.Value;
             DateTime businessStart = DateTime.Today.AddHours(8);
-            DateTime businessEnd = DateTime.Today.AddHours(20);
-            
+            DateTime businessEnd = DateTime.Today.AddHours(17);
+
 
             if (localStart.TimeOfDay < businessStart.TimeOfDay || localEnd.TimeOfDay > businessEnd.TimeOfDay)
             {
                 DialogResult OfficeClosed = MessageBox.Show("Unable to add appointment as the office is closed durring this time!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (localStart.TimeOfDay > localEnd.TimeOfDay)
+            {
+                DialogResult endBeforeStart = MessageBox.Show("The appointments end time cannot be before the start time!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -93,8 +106,133 @@ namespace SchedulingApp
                 DialogResult doubleBook = MessageBox.Show("There was an issue saving the appointment, please review the appointment and try again!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-
+            if (string.IsNullOrWhiteSpace(cmbCustomerName.Text))
+            {
+                cmbCustomerName.BackColor = System.Drawing.Color.Salmon;
+                cmbCustomerNameValid = false;
+            }
+            else
+            {
+                cmbCustomerName.BackColor = System.Drawing.Color.White;
+                cmbCustomerNameValid = true;
+            }
+            if (string.IsNullOrWhiteSpace(txtTitle.Text))
+            {
+                txtTitle.BackColor = System.Drawing.Color.Salmon;
+                txtTitleValid = false;
+            }
+            else
+            {
+                txtTitle.BackColor = System.Drawing.Color.White;
+                txtTitleValid = true;
+            }
+            if (string.IsNullOrWhiteSpace(txtDescription.Text))
+            {
+                txtDescription.BackColor = System.Drawing.Color.Salmon;
+                txtDescriptionValid = false;
+            }
+            else
+            {
+                txtDescription.BackColor = System.Drawing.Color.White;
+                txtDescriptionValid = true;
+            }
+            if (string.IsNullOrWhiteSpace(txtLocation.Text))
+            {
+                txtLocation.BackColor = System.Drawing.Color.Salmon;
+                txtLocationValid = false;
+            }
+            else
+            {
+                txtLocation.BackColor = System.Drawing.Color.White;
+                txtLocationValid = true;
+            }
+            if (string.IsNullOrWhiteSpace(txtContact.Text))
+            {
+                txtContact.BackColor = System.Drawing.Color.Salmon;
+                txtContactValid = false;
+            }
+            else
+            {
+                txtContact.BackColor = System.Drawing.Color.White;
+                txtContactValid = true;
+            }
+            if (string.IsNullOrWhiteSpace(txtURL.Text))
+            {
+                txtURL.BackColor = System.Drawing.Color.Salmon;
+                txtURLValid = false;
+            }
+            else
+            {
+                txtURL.BackColor = System.Drawing.Color.White;
+                txtURLValid = true;
+            }
+            if (string.IsNullOrWhiteSpace(cmbUserName.Text))
+            {
+                cmbUserName.BackColor = System.Drawing.Color.Salmon;
+                cmbUserNameValid = false;
+            }
+            else
+            {
+                cmbUserName.BackColor = System.Drawing.Color.White;
+                cmbUserNameValid = true;
+            }
+            if (string.IsNullOrWhiteSpace(cmbType.Text))
+            {
+                cmbType.BackColor = System.Drawing.Color.Salmon;
+                cmbTypeValid = false;
+            }
+            else
+            {
+                cmbType.BackColor = System.Drawing.Color.White;
+                cmbTypeValid = true;
+            }
+            if (txtTitleValid == false || txtDescriptionValid == false || txtLocationValid == false || txtContactValid == false || txtURLValid == false || cmbCustomerNameValid == false || cmbUserNameValid == false || cmbTypeValid == false)
+            {
+                DialogResult fieldError = MessageBox.Show("Please fill in all required fields!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false; 
+            }
             return true;
+
+        }
+
+        private void cmbCustomerName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtTitle_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtDescription_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtLocation_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtContact_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtURL_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cmbUserName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cmbType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

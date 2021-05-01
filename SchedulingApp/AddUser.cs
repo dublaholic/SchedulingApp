@@ -13,6 +13,8 @@ namespace SchedulingApp
     public partial class AddUser : Form
     {
         public User loginUser;
+        bool txtUsernameValid = false;
+        bool txtPasswordValid = false;
         public AddUser(User user)
         {
             InitializeComponent();
@@ -26,12 +28,48 @@ namespace SchedulingApp
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            int activeCustomer = 1;
-            DataAction addUser= new DataAction();
 
-            addUser.AddUser(txtUsername.Text, txtPassword.Text, activeCustomer, loginUser.username);
+            bool validate = ValidateForm();
 
-            this.Close();
+            if (validate == true)
+            {
+
+                int activeCustomer = 1;
+                DataAction addUser = new DataAction();
+
+                addUser.AddUser(txtUsername.Text, txtPassword.Text, activeCustomer, loginUser.username);
+
+                this.Close();
+            }
+        }
+        private bool ValidateForm()
+        {
+            if (string.IsNullOrWhiteSpace(txtUsername.Text))
+            {
+                txtUsername.BackColor = System.Drawing.Color.Salmon;
+                txtUsernameValid = false;
+            }
+            else
+            {
+                txtUsername.BackColor = System.Drawing.Color.White;
+                txtUsernameValid = true;
+            }
+            if (string.IsNullOrWhiteSpace(txtPassword.Text))
+            {
+                txtPassword.BackColor = System.Drawing.Color.Salmon;
+                txtPasswordValid = false;
+            }
+            else
+            {
+                txtPassword.BackColor = System.Drawing.Color.White;
+                txtPasswordValid = true;
+            }
+            if (txtUsernameValid == false || txtPasswordValid == false)
+            {
+                DialogResult fieldError = MessageBox.Show("Please fill in all required fields!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
         }
 
     }

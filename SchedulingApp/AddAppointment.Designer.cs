@@ -61,6 +61,7 @@ namespace SchedulingApp
             this.cmbUserName.Name = "cmbUserName";
             this.cmbUserName.Size = new System.Drawing.Size(121, 21);
             this.cmbUserName.TabIndex = 49;
+            this.cmbUserName.SelectedIndexChanged += new System.EventHandler(this.cmbUserName_SelectedIndexChanged);
             // 
             // cmbCustomerName
             // 
@@ -70,6 +71,7 @@ namespace SchedulingApp
             this.cmbCustomerName.Name = "cmbCustomerName";
             this.cmbCustomerName.Size = new System.Drawing.Size(121, 21);
             this.cmbCustomerName.TabIndex = 48;
+            this.cmbCustomerName.SelectedIndexChanged += new System.EventHandler(this.cmbCustomerName_SelectedIndexChanged);
             // 
             // btnCancel
             // 
@@ -115,6 +117,7 @@ namespace SchedulingApp
             this.txtURL.Name = "txtURL";
             this.txtURL.Size = new System.Drawing.Size(100, 20);
             this.txtURL.TabIndex = 41;
+            this.txtURL.TextChanged += new System.EventHandler(this.txtURL_TextChanged);
             // 
             // label9
             // 
@@ -140,6 +143,7 @@ namespace SchedulingApp
             this.txtContact.Name = "txtContact";
             this.txtContact.Size = new System.Drawing.Size(100, 20);
             this.txtContact.TabIndex = 37;
+            this.txtContact.TextChanged += new System.EventHandler(this.txtContact_TextChanged);
             // 
             // label7
             // 
@@ -156,6 +160,7 @@ namespace SchedulingApp
             this.txtLocation.Name = "txtLocation";
             this.txtLocation.Size = new System.Drawing.Size(100, 20);
             this.txtLocation.TabIndex = 35;
+            this.txtLocation.TextChanged += new System.EventHandler(this.txtLocation_TextChanged);
             // 
             // label6
             // 
@@ -172,6 +177,7 @@ namespace SchedulingApp
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.Size = new System.Drawing.Size(100, 20);
             this.txtDescription.TabIndex = 33;
+            this.txtDescription.TextChanged += new System.EventHandler(this.txtDescription_TextChanged);
             // 
             // label5
             // 
@@ -188,6 +194,7 @@ namespace SchedulingApp
             this.txtTitle.Name = "txtTitle";
             this.txtTitle.Size = new System.Drawing.Size(100, 20);
             this.txtTitle.TabIndex = 31;
+            this.txtTitle.TextChanged += new System.EventHandler(this.txtTitle_TextChanged);
             // 
             // label4
             // 
@@ -243,6 +250,7 @@ namespace SchedulingApp
             this.cmbType.Name = "cmbType";
             this.cmbType.Size = new System.Drawing.Size(121, 21);
             this.cmbType.TabIndex = 52;
+            this.cmbType.SelectedIndexChanged += new System.EventHandler(this.cmbType_SelectedIndexChanged);
             // 
             // AddAppointment
             // 
