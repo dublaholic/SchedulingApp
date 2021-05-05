@@ -108,7 +108,7 @@ namespace SchedulingApp
                 return false;
             }
 
-            int bookingResult = validate.CheckDoubleBook(loginUser.userID, dtpStart.Value, dtpEnd.Value);
+            int bookingResult = validate.CheckDoubleBookMod(int.Parse(txtAppointmentId.Text), loginUser.userID, dtpStart.Value, dtpEnd.Value);
 
             if (bookingResult >= 1)
             {

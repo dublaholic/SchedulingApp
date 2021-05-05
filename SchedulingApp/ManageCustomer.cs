@@ -74,7 +74,7 @@ namespace SchedulingApp
             {
                 case "New York":
                     cmbCountry.SelectedItem = "US";
-                    cityID = 2;
+                    cityID = 1;
                     break;
                 case "Los Angeles":
                     cmbCountry.SelectedItem = "US";

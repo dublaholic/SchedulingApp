@@ -333,7 +333,47 @@ namespace SchedulingApp
                 return appointment;
             }
         }
-            
+        public int CheckDoubleBookMod(int appointmentId, int userId, DateTime start, DateTime end)
+        {
+            string CheckDoubleBookModQuery = "SELECT appointmentId FROM appointment " +
+            " WHERE appointmentId <> @appointmentId and userId = @userId and start >= @startDate and start <= @endDate or end >= @startDate and end <= @endDate";
+            int appointment = 0;
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand CheckDoublebookModCMD = new MySqlCommand(CheckDoubleBookModQuery, connection);
+                CheckDoublebookModCMD.Parameters.AddWithValue("@userId", userId);
+                CheckDoublebookModCMD.Parameters.AddWithValue("@appointmentId", appointmentId);
+                CheckDoublebookModCMD.Parameters.AddWithValue("@startDate", ToUTC(start));
+                CheckDoublebookModCMD.Parameters.AddWithValue("@endDate", ToUTC(end));
+
+                List<int> ids = new List<int>();
+                using (MySqlDataReader rdr = CheckDoublebookModCMD.ExecuteReader())
+                {
+                    while (rdr.Read())
+                    {
+                        ids.Add(int.Parse(rdr["appointmentId"].ToString()));
+
+
+                    }
+                }
+                foreach (int appointments in ids)
+                {
+                    if (appointments != appointmentId)
+                    {
+                        appointment++;
+                    }
+                }
+
+                this.CloseConnection();
+                return appointment;
+            }
+            else
+            {
+                appointment = -1;
+                return appointment;
+            }
+        }
+
 
         //ADDS
 
@@ -457,7 +497,7 @@ namespace SchedulingApp
             DateTime stamp = TimeStamp();
             string formatedDate = FormatDate(stamp);
             string getAddressIDQuery = "SELECT addressId FROM customer WHERE customerId = @customerId";
-            string modAddressQuery = "UPDATE address SET address = @address, address2 = @address2,  postalCode= @postalCode, phone = @phone, lastUpdate = @formatedDate, lastUpdateBy = @createdby " +
+            string modAddressQuery = "UPDATE address SET address = @address, address2 = @address2, postalCode= @postalCode, phone = @phone, lastUpdate = @formatedDate, lastUpdateBy = @createdby " +
                 "WHERE addressId = @returnedAddressId";
             string modCustomerQuery = "UPDATE customer SET customerName = @customerName, active = @active, lastUpdate = @customerFormatedDate, lastUpdateBy = @customerCreatedBy " +
                 "WHERE customerId = @customerId";
